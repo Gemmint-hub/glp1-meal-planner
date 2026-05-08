@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-export default function GLP1Planner() {
+export default function Home() {
   const [step, setStep] = useState('onboarding');
   const [formData, setFormData] = useState({
     name: '',
     sideEffects: [],
     dietaryRestrictions: [],
-    budget: 'moderate',
-    cuisinePreferences: []
+    budget: 'moderate'
   });
   const [mealPlan, setMealPlan] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -55,6 +54,7 @@ export default function GLP1Planner() {
       const data = await response.json();
       if (data.error) {
         setError(data.error);
+        setLoading(false);
         return;
       }
       setMealPlan(data);
@@ -66,7 +66,7 @@ export default function GLP1Planner() {
   };
 
   return (
-    <div style={{ padding: '2rem 1.5rem', maxWidth: '600px', margin: '0 auto', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div style={{ padding: '2rem 1.5rem', maxWidth: '600px', margin: '0 auto', fontFamily: 'system-ui, -apple-system, sans-serif', minHeight: '100vh', background: '#fff' }}>
       {step === 'onboarding' && (
         <div>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -79,7 +79,7 @@ export default function GLP1Planner() {
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#333' }}>
               Your name
             </label>
             <input
@@ -99,7 +99,7 @@ export default function GLP1Planner() {
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#333' }}>
               Current side effects
             </label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
@@ -109,7 +109,7 @@ export default function GLP1Planner() {
                     type="checkbox"
                     checked={formData.sideEffects.includes(opt.id)}
                     onChange={() => handleCheckbox('sideEffects', opt.id)}
-                    style={{ marginRight: '0.5rem' }}
+                    style={{ marginRight: '0.5rem', cursor: 'pointer' }}
                   />
                   {opt.label}
                 </label>
@@ -118,7 +118,7 @@ export default function GLP1Planner() {
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#333' }}>
               Dietary restrictions
             </label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
@@ -128,7 +128,7 @@ export default function GLP1Planner() {
                     type="checkbox"
                     checked={formData.dietaryRestrictions.includes(opt.id)}
                     onChange={() => handleCheckbox('dietaryRestrictions', opt.id)}
-                    style={{ marginRight: '0.5rem' }}
+                    style={{ marginRight: '0.5rem', cursor: 'pointer' }}
                   />
                   {opt.label}
                 </label>
@@ -137,7 +137,7 @@ export default function GLP1Planner() {
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#333' }}>
               Budget preference
             </label>
             <select
@@ -159,7 +159,7 @@ export default function GLP1Planner() {
           </div>
 
           {error && (
-            <div style={{ color: '#d32f2f', fontSize: '13px', marginBottom: '1rem' }}>
+            <div style={{ color: '#d32f2f', fontSize: '13px', marginBottom: '1rem', padding: '0.75rem', background: '#ffebee', borderRadius: '4px' }}>
               {error}
             </div>
           )}
@@ -175,9 +175,12 @@ export default function GLP1Planner() {
               border: 'none',
               borderRadius: '6px',
               fontSize: '14px',
-              fontWeight: 500,
-              cursor: loading ? 'not-allowed' : 'pointer'
+              fontWeight: 600,
+              cursor: loading ? 'not-allowed' : 'pointer',
+              transition: 'background 0.2s'
             }}
+            onMouseEnter={(e) => !loading && (e.target.style.background = '#0051cc')}
+            onMouseLeave={(e) => !loading && (e.target.style.background = '#0070f3')}
           >
             {loading ? 'Generating your plan...' : 'Generate My Meal Plan'}
           </button>
@@ -187,7 +190,7 @@ export default function GLP1Planner() {
       {step === 'results' && mealPlan && (
         <div>
           <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-            <h1 style={{ fontSize: '24px', fontWeight: 500, margin: '0 0 0.5rem' }}>
+            <h1 style={{ fontSize: '24px', fontWeight: 500, margin: '0 0 0.5rem', color: '#1a1a1a' }}>
               Your Personalized Plan
             </h1>
             <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>
@@ -197,25 +200,25 @@ export default function GLP1Planner() {
 
           {mealPlan.days && mealPlan.days.map((day, idx) => (
             <div key={idx} style={{ marginBottom: '1.5rem' }}>
-              <h2 style={{ fontSize: '16px', fontWeight: 500, marginBottom: '0.75rem' }}>
+              <h2 style={{ fontSize: '16px', fontWeight: 500, marginBottom: '0.75rem', color: '#1a1a1a' }}>
                 Day {day.day}
               </h2>
               {day.meals && day.meals.map((meal, mIdx) => (
                 <div
                   key={mIdx}
                   style={{
-                    background: '#f5f5f5',
+                    background: '#f9f9f9',
                     border: '1px solid #eee',
                     borderRadius: '8px',
                     padding: '1rem',
                     marginBottom: '0.75rem'
                   }}
                 >
-                  <h3 style={{ fontSize: '14px', fontWeight: 500, margin: '0 0 0.5rem' }}>
+                  <h3 style={{ fontSize: '14px', fontWeight: 500, margin: '0 0 0.5rem', color: '#1a1a1a' }}>
                     {meal.name}
                   </h3>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', fontSize: '12px', color: '#666', marginBottom: '0.75rem' }}>
-                    <div>{meal.calories || meal.portion} cal</div>
+                    <div>{meal.calories || 0} cal</div>
                     <div>{meal.protein || 20}g protein</div>
                   </div>
                   <p style={{ fontSize: '12px', color: '#666', margin: 0 }}>
@@ -227,13 +230,13 @@ export default function GLP1Planner() {
           ))}
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <h2 style={{ fontSize: '16px', fontWeight: 500, marginBottom: '0.75rem' }}>
+            <h2 style={{ fontSize: '16px', fontWeight: 500, marginBottom: '0.75rem', color: '#1a1a1a' }}>
               Shopping List
             </h2>
-            <div style={{ background: '#f5f5f5', border: '1px solid #eee', borderRadius: '8px', padding: '1rem' }}>
+            <div style={{ background: '#f9f9f9', border: '1px solid #eee', borderRadius: '8px', padding: '1rem' }}>
               <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
                 {mealPlan.shopping && mealPlan.shopping.map((item, idx) => (
-                  <li key={idx} style={{ fontSize: '13px', marginBottom: '0.5rem' }}>
+                  <li key={idx} style={{ fontSize: '13px', marginBottom: '0.5rem', color: '#333' }}>
                     {item}
                   </li>
                 ))}
@@ -242,13 +245,13 @@ export default function GLP1Planner() {
           </div>
 
           {mealPlan.tips && (
-            <div>
-              <h2 style={{ fontSize: '16px', fontWeight: 500, marginBottom: '0.75rem' }}>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h2 style={{ fontSize: '16px', fontWeight: 500, marginBottom: '0.75rem', color: '#1a1a1a' }}>
                 Tips for Success
               </h2>
               <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
                 {mealPlan.tips.map((tip, idx) => (
-                  <li key={idx} style={{ fontSize: '13px', marginBottom: '0.5rem' }}>
+                  <li key={idx} style={{ fontSize: '13px', marginBottom: '0.5rem', color: '#333' }}>
                     {tip}
                   </li>
                 ))}
@@ -269,7 +272,9 @@ export default function GLP1Planner() {
               border: '1px solid #ddd',
               borderRadius: '6px',
               fontSize: '14px',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              color: '#333',
+              fontWeight: 500
             }}
           >
             Create Another Plan
